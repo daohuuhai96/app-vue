@@ -1,27 +1,18 @@
 <template>
   <div id="app">
-    <div class="body">
-      <Header />
-      <Product />
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
-import Product from './components/Product.vue'
 
 export default {
   name: 'App',
-  components: {
-    Header,
-    Product
-  }
 }
 </script>
 
 <style>
-  #id {
+  #id-project {
     width: 100%;
   }
   .body {
