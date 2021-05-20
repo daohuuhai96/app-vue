@@ -1,53 +1,40 @@
 <template>
-  <div class="section-product">
-    <div class="product" v-for="dataProducts in dataProduct" :key="dataProducts.id">
-      <router-link to="/ProductDetail">
-        <img :src="(dataProducts.primary_photo_cropped)?dataProducts.primary_photo_cropped.small:''" alt="">
-      </router-link>
-      <div class="product-text">
-        <p>{{dataProducts.name}}</p>
-        <p>{{dataProducts.type}}</p>
-        <p>{{dataProducts.age}}</p>
+  <div>
+    <div v-if="status" class="section-product">
+      <div class="product" v-for="dataProduct in dataProducts" :key="dataProduct.id">
+        <router-link class="img-product" :to='/user/+ dataProduct.id'>
+          <img :src="(dataProduct.primary_photo_cropped)?dataProduct.primary_photo_cropped.small:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYqZnk_chuCsWR1Q8ZSv5HpB8lSHrqT-AsyA&usqp=CAU'" alt="">
+        </router-link>
+        <div class="product-text">
+          <p>{{dataProduct.name}}</p>
+          <p>{{dataProduct.type}}</p>
+          <p>{{dataProduct.age}}</p>
+        </div>
+        <router-link class="link-detail" to="/ProductDetail">Details.....</router-link>
       </div>
-      <router-link class="link-detail" to="/ProductDetail">Details.....</router-link>
     </div>
-    <ProductDetail :dataProduct="dataProduct"></ProductDetail>
+    <div v-else class="status">Vui lòng đăng nhập</div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import ProductDetail from './pages/ProductDetail.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Product',
-  components : {
-    ProductDetail,
+  created () {
+    this.getProFile(this.$route.query.page, this.$route.query.limit)
   },
-  data () {
-    return {
-      dataProduct : [],
+  computed: {
+    status () {
+      return this.$store.state.status
+    },
+    dataProducts() {
+      return this.$store.state.dataProducts
     }
   },
-  created () {
-    this.getProFile()
-  },
   methods: {
-    async getProFile () {
-      try {
-        const res = await axios({
-          method: 'get',
-          url: 'https://api.petfinder.com/v2/animals',
-          headers : {
-            Authorization : localStorage.getItem('jwt')
-          }
-        });
-        console.log(typeof res.data.animals[0], res.data.animals[0])
-        this.dataProduct = res.data.animals
-      } catch (e) {
-        console.log(e)
-      }
-    },
+    ...mapActions(['getProFile'])
   },
 }
 </script>
@@ -73,6 +60,8 @@ export default {
     padding: 0 1em;
     margin-top: 10px;
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
   p {
     margin-right: 20px;
@@ -83,5 +72,21 @@ export default {
   .link-detail {
     margin-top: 1em;
     margin-left: 1em;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .status {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 3em;
+  }
+  
+  .img-product{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   }
 </style>

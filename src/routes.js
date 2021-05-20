@@ -8,10 +8,11 @@ Vue.use(VueRouter)
 export const router = new VueRouter({
     routes: [{
             path: '/',
+            query: {},
             component: Home
         },
         {
-            path: '/ProductDetail',
+            path: '/user/:id',
             component: ProductDetail
         }
     ]
